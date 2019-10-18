@@ -24,12 +24,12 @@ all:
 	$(MAKE) -C edgesite
 else ifeq ($(WHAT),keadm)
 all:
-# make all WHAT=keadm, build keadm binary
+# make all WHAT=keadm
 	cd keadm && $(MAKE)
 else
 # invalid entry
 all:
-	@echo $S"invalid option please choose to build either cloud, edge, keadm, edgesite or all together"
+	@echo $S"invalid option please choose to build either cloudcore, admission, edgecore, keadm, edgesite or all together"
 endif
 
 # unit tests
@@ -108,6 +108,10 @@ cloudimage:
 .PHONY: admissionimage
 admissionimage:
 	docker build -t kubeedge/admission:${IMAGE_TAG} -f build/admission/Dockerfile .
+
+.PHONY: csidriverimage
+csidriverimage:
+	docker build -t kubeedge/csidriver:${IMAGE_TAG} -f build/csidriver/Dockerfile .
 
 .PHONY: edgeimage
 edgeimage:

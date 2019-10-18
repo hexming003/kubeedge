@@ -25,7 +25,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"sort"
 	"time"
 
@@ -193,10 +192,6 @@ func (uc *UpstreamController) dispatchMessage(stop chan struct{}) {
 		}
 		klog.Infof("message: %s, resource type is: %s", msg.GetID(), resourceType)
 		operationType := msg.GetOperation()
-		if err != nil {
-			klog.Warningf("parse message: %s operation type with error: %s", msg.GetID(), err)
-			continue
-		}
 		klog.Infof("message: %s, operation type is: %s", msg.GetID(), operationType)
 
 		switch resourceType {
@@ -225,10 +220,10 @@ func (uc *UpstreamController) dispatchMessage(stop chan struct{}) {
 			case model.UpdateOperation:
 				uc.updateNodeChan <- msg
 			default:
-				err = fmt.Errorf("message: %s, operation type: %s unsupported", msg.GetID(), operationType)
+				klog.Errorf("message: %s, operation type: %s unsupported", msg.GetID(), operationType)
 			}
 		default:
-			err = fmt.Errorf("message: %s, resource type: %s unsupported", msg.GetID(), resourceType)
+			klog.Errorf("message: %s, resource type: %s unsupported", msg.GetID(), resourceType)
 		}
 	}
 }
@@ -425,6 +420,10 @@ func (uc *UpstreamController) updateNodeStatus(stop chan struct{}) {
 					}
 					getNode.Annotations[string(name)] = string(data)
 				}
+
+				// Keep the same "VolumesAttached" attribute with upstream,
+				// since this value is maintained by kube-controller-manager.
+				nodeStatusRequest.Status.VolumesAttached = getNode.Status.VolumesAttached
 
 				getNode.Status = nodeStatusRequest.Status
 				if _, err := uc.kubeClient.CoreV1().Nodes().UpdateStatus(getNode); err != nil {
