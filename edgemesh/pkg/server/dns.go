@@ -93,10 +93,11 @@ func startDnsServer() {
 		Port: 53,
 	}
 	udpConn, err := net.ListenUDP("udp", laddr)
-	defer udpConn.Close()
 	if err != nil {
 		klog.Errorf("Dns server Start error : %s", err)
+		return
 	}
+	defer udpConn.Close()
 	dnsConn = udpConn
 	for {
 		req := make([]byte, bufSize)
@@ -188,10 +189,7 @@ func parseDnsQuery(req []byte) (que []dnsQuestion, err error) {
 
 //isAQuery judge if the dns pkg is a Qurey process
 func (h *dnsHeader) isAQurey() bool {
-	if h.flags&dnsQr != dnsQr {
-		return true
-	}
-	return false
+	return h.flags&dnsQr != dnsQr
 }
 
 //getHeader get dns pkg head

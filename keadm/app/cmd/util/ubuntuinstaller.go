@@ -437,7 +437,7 @@ func (u *UbuntuOS) InstallKubeEdge() error {
 	//Currently it is missing and once checksum is in place, checksum check required
 	//to be added here.
 	filename := fmt.Sprintf("kubeedge-v%s-linux-%s.tar.gz", u.KubeEdgeVersion, arch)
-	checksumFilename := fmt.Sprintf("checksum_kubeedge-v%s-linux-%s.txt", u.KubeEdgeVersion, arch)
+	checksumFilename := fmt.Sprintf("checksum_kubeedge-v%s-linux-%s.tar.gz.txt", u.KubeEdgeVersion, arch)
 	filePath := fmt.Sprintf("%s%s", KubeEdgePath, filename)
 	fileStat, err := os.Stat(filePath)
 	if err == nil && fileStat.Name() != "" {
@@ -487,7 +487,7 @@ func (u *UbuntuOS) InstallKubeEdge() error {
 	}
 
 SKIPDOWNLOADAND:
-	untarFileAndMove := fmt.Sprintf("cd %s && tar -C %s -xvzf %s && cp %s/kubeedge/edge/%s /usr/local/bin/.", KubeEdgePath, KubeEdgePath, filename, KubeEdgePath, KubeEdgeBinaryName)
+	untarFileAndMove := fmt.Sprintf("cd %s && tar -C %s -xvzf %s && cp %skubeedge/edge/%s /usr/local/bin/.", KubeEdgePath, KubeEdgePath, filename, KubeEdgePath, KubeEdgeBinaryName)
 	stdout, err := runCommandWithShell(untarFileAndMove)
 	if err != nil {
 		return err

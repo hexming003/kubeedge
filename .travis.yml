@@ -2,6 +2,8 @@ language: go
 
 sudo: required
 
+dist: trusty
+
 services:
   - docker
 
@@ -17,7 +19,7 @@ before_install:
       fi
 
 before_script:
-  - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | BINARY=golangci-lint sh -s -- -d -b $(go env GOPATH)/bin v1.16.0
+  - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | BINARY=golangci-lint sh -s -- -d -b $(go env GOPATH)/bin v1.20.0
   - mkdir -p $HOME/gopath/src/github.com/kubeedge/kubeedge
   - rsync -az ${TRAVIS_BUILD_DIR}/ $HOME/gopath/src/github.com/kubeedge/kubeedge/
   - export TRAVIS_BUILD_DIR=$HOME/gopath/src/github.com/kubeedge/kubeedgee
@@ -34,7 +36,7 @@ install: true
 jobs:
   include:
     - stage: "Verify vendor"
-      script: make vendorCheck
+      script: make verify
       name: "check if the vendor is up to date"
 
     - stage: "Test lint"
@@ -50,8 +52,6 @@ jobs:
     - stage: "Test Build"                # naming the Tests stage
       script: make 
       name: "builds cloud and edge components"            # names the first Tests stage job
-    - script: make edge_cross_build
-      name: "cross build edge"     # names the fifth Tests stage job
     - script: make bluetoothdevice
       name: "build bluetooth_device"
     - script: make edge_small_build

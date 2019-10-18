@@ -97,35 +97,6 @@ func WriteCloudModulesYamlFile(path string) error {
 	return nil
 }
 
-//WriteCloudLoggingYamlFile writes logging yaml for cloud component
-func WriteCloudLoggingYamlFile(path string) error {
-	loggingData := LoggingYaml{
-		LoggerLevel:   "INFO",
-		EnableRsysLog: false,
-		LogFormatText: true,
-		Writers:       []string{"file", "stdout"},
-		LoggerFile:    "cloudcore.log",
-	}
-	if err := Write2File(path, loggingData); err != nil {
-		return err
-	}
-	return nil
-}
-
-//WriteEdgeLoggingYamlFile writes logging yaml for edge component
-func WriteEdgeLoggingYamlFile(path string) error {
-	loggingData := LoggingYaml{
-		LoggerLevel:   "DEBUG",
-		EnableRsysLog: false,
-		LogFormatText: true,
-		Writers:       []string{"stdout"},
-	}
-	if err := Write2File(path, loggingData); err != nil {
-		return err
-	}
-	return nil
-}
-
 //WriteEdgeModulesYamlFile writes modules.yaml for edge component
 func WriteEdgeModulesYamlFile(path string) error {
 	modulesData := ModulesYaml{
@@ -150,8 +121,8 @@ func WriteEdgeModulesYamlFile(path string) error {
 //WriteEdgeYamlFile write conf/edge.yaml for edge component
 func WriteEdgeYamlFile(path string, modifiedEdgeYaml *EdgeYamlSt) error {
 	iface := "eth0"
-	edgeID := "fb4ebb70-2783-42b8-b3ef-63e2fd6d242e"
-	url := fmt.Sprintf("wss://0.0.0.0:10000/%s/fb4ebb70-2783-42b8-b3ef-63e2fd6d242e/events", DefaultProjectID)
+	edgeID := "edge-node"
+	url := fmt.Sprintf("wss://0.0.0.0:10000/%s/edge-node/events", DefaultProjectID)
 	runtimeType := "docker"
 
 	if nil != modifiedEdgeYaml {
